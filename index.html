@@ -325,7 +325,7 @@ var RW=["⭐ Estrela conquistada! Cada receita é um passo.","🔥 Sequência pe
 var MS={1:"🥇 Primeiro dia! Quem começa já está na frente.",7:"🏆 Semana 1 completa! Você ganhou o selo Persistente.",14:"🏆 Semana 2 completa! Selo Constante desbloqueado.",21:"👑 21 dias! Selo Transformação. Você terminou o desafio."};
 var S={done:{},ch:{},w:{}};
 try{var t=JSON.parse(localStorage.getItem("c21"));if(t)S=t}catch(e){}
-S.d=S.d||{};S.nr=S.nr||{};S.nf=S.nf||{};S.sh=S.sh||{};S.fq=S.fq||{};function save(){try{localStorage.setItem("c21",JSON.stringify(S))}catch(e){}}
+S.d=S.d||{};S.nr=S.nr||{};S.nf=S.nf||{};S.sh=S.sh||{};S.fq=S.fq||{};function save(){try{localStorage.setItem("c21",JSON.stringify(S))}catch(e){}try{syncTags()}catch(e){}}
 function cnt(){return Object.keys(S.done).length}
 var tab="home",pg=1,cur=-1,msg="";
 var $=function(i){return document.getElementById(i)};
@@ -544,12 +544,13 @@ window.OneSignalDeferred=window.OneSignalDeferred||[];
 (function(){
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 if(ONESIGNAL_APP_ID){var s=document.createElement("script");s.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";s.defer=true;document.head.appendChild(s);
-OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"");return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:P.slice(1)+"sw.js",serviceWorkerParam:{scope:P},notifyButton:{enable:false},allowLocalhostAsSecureOrigin:true})})}
+OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"");return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:P.slice(1)+"sw.js",serviceWorkerParam:{scope:P},notifyButton:{enable:false},allowLocalhostAsSecureOrigin:true}).then(function(){if(Notification.permission==="granted"){try{O.User.PushSubscription.optIn()}catch(e){}}syncTags()})})}
 })();
+function syncTags(){if(!ONESIGNAL_APP_ID)return;var n=cnt(),c=Object.keys(S.ch).length;OneSignalDeferred.push(function(O){try{O.User.addTags({nome:String(S.name||""),receitas:String(n),dia_atual:String(Math.min(n+1,21)),desafios:String(c),desafio_ok:(n>0&&c>=n)?"sim":"nao"})}catch(e){}})}
 function ativarLembretes(){
 if(!("Notification" in window)){alert("Este aparelho não permite notificações aqui.");return}
 var fim=function(p){if(p==="granted"||Notification.permission==="granted"){try{navigator.serviceWorker.ready.then(function(r){r.showNotification("Lembretes ativados! 🍓",{body:"Vou te avisar da receita e do desafio do dia.",icon:"icon-192.png",badge:"icon-192.png"})})}catch(e){}}draw()};
-if(ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){O.Notifications.requestPermission().then(function(){fim("granted")})})}
+if(ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){O.Notifications.requestPermission().then(function(){return O.User.PushSubscription.optIn()}).then(function(){syncTags();fim("granted");setTimeout(function(){alert("Teste OneSignal - ID: "+(O.User.PushSubscription.id||"nenhum")+" | ativo: "+O.User.PushSubscription.optedIn)},4000)}).catch(function(e){alert("Erro OneSignal: "+e);fim("granted")})})}
 else{Notification.requestPermission().then(fim)}}
 </script>
 </body>
