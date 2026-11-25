@@ -544,7 +544,7 @@ window.OneSignalDeferred=window.OneSignalDeferred||[];
 (function(){
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 if(ONESIGNAL_APP_ID){var s=document.createElement("script");s.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";s.defer=true;document.head.appendChild(s);
-OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"");return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:P.slice(1)+"sw.js",serviceWorkerParam:{scope:P},notifyButton:{enable:false},allowLocalhostAsSecureOrigin:true}).then(function(){if(Notification.permission==="granted"){try{O.User.PushSubscription.optIn()}catch(e){}}syncTags()})})}
+OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"");return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:P.slice(1)+"sw.js",serviceWorkerParam:{scope:P},notifyButton:{enable:false},allowLocalhostAsSecureOrigin:true}).then(function(){if(Notification.permission==="granted"){try{O.User.PushSubscription.optIn().catch(function(e){window.__osErr="optIn: "+(e&&e.message||e)})}catch(e){}}syncTags()}).catch(function(e){window.__osErr="init: "+(e&&e.message||e)})})}
 })();
 function syncTags(){if(!ONESIGNAL_APP_ID)return;var n=cnt(),c=Object.keys(S.ch).length;OneSignalDeferred.push(function(O){try{O.User.addTags({nome:String(S.name||""),receitas:String(n),dia_atual:String(Math.min(n+1,21)),desafios:String(c),desafio_ok:(n>0&&c>=n)?"sim":"nao"})}catch(e){}})}
 function ativarLembretes(){
@@ -553,7 +553,7 @@ var fim=function(p){if(p==="granted"||Notification.permission==="granted"){try{n
 Notification.requestPermission().then(function(p){
 if(p==="granted"&&ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){try{O.User.PushSubscription.optIn()}catch(e){}syncTags()})}
 fim(p);
-setTimeout(function(){var O=window.OneSignal;alert("Versao 4 | permissao: "+Notification.permission+" | SDK: "+((O&&O.User)?"carregou":"NAO carregou")+" | ID: "+((O&&O.User&&O.User.PushSubscription&&O.User.PushSubscription.id)||"nenhum"))},5000)
+setTimeout(function(){var O=window.OneSignal;alert("Versao 5 | erro: "+(window.__osErr||"nenhum")+" | permissao: "+Notification.permission+" | SDK: "+((O&&O.User)?"carregou":"NAO carregou")+" | ID: "+((O&&O.User&&O.User.PushSubscription&&O.User.PushSubscription.id)||"nenhum"))},5000)
 })}
 
 </script>
