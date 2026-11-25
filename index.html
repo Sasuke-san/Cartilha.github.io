@@ -539,12 +539,12 @@ draw();welcome();
 /* ===== LEMBRETES (OneSignal) =====
    1) Crie o app no OneSignal (Web Push) e cole o App ID abaixo.
    2) Sem App ID, o botão só pede a permissão e mostra uma notificação de teste. */
-var ONESIGNAL_APP_ID="";
+var ONESIGNAL_APP_ID="42367610-3aa1-4e40-8902-fdb011203474";
 window.OneSignalDeferred=window.OneSignalDeferred||[];
 (function(){
 if("serviceWorker" in navigator){window.addEventListener("load",function(){navigator.serviceWorker.register("sw.js").catch(function(){})})}
 if(ONESIGNAL_APP_ID){var s=document.createElement("script");s.src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js";s.defer=true;document.head.appendChild(s);
-OneSignalDeferred.push(function(O){return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:"sw.js",allowLocalhostAsSecureOrigin:true})})}
+OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"");return O.init({appId:ONESIGNAL_APP_ID,serviceWorkerPath:P.slice(1)+"sw.js",serviceWorkerParam:{scope:P},notifyButton:{enable:false},allowLocalhostAsSecureOrigin:true})})}
 })();
 function ativarLembretes(){
 if(!("Notification" in window)){alert("Este aparelho não permite notificações aqui.");return}
