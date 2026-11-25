@@ -548,11 +548,14 @@ OneSignalDeferred.push(function(O){var P=location.pathname.replace(/[^\/]*$/,"")
 })();
 function syncTags(){if(!ONESIGNAL_APP_ID)return;var n=cnt(),c=Object.keys(S.ch).length;OneSignalDeferred.push(function(O){try{O.User.addTags({nome:String(S.name||""),receitas:String(n),dia_atual:String(Math.min(n+1,21)),desafios:String(c),desafio_ok:(n>0&&c>=n)?"sim":"nao"})}catch(e){}})}
 function ativarLembretes(){
-alert("Versao 3 | permissao: "+(("Notification" in window)?Notification.permission:"sem suporte"));
 if(!("Notification" in window)){alert("Este aparelho não permite notificações aqui.");return}
 var fim=function(p){if(p==="granted"||Notification.permission==="granted"){try{navigator.serviceWorker.ready.then(function(r){r.showNotification("Lembretes ativados! 🍓",{body:"Vou te avisar da receita e do desafio do dia.",icon:"icon-192.png",badge:"icon-192.png"})})}catch(e){}}draw()};
-if(ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){O.Notifications.requestPermission().then(function(){return O.User.PushSubscription.optIn()}).then(function(){syncTags();fim("granted");setTimeout(function(){alert("Teste OneSignal - ID: "+(O.User.PushSubscription.id||"nenhum")+" | ativo: "+O.User.PushSubscription.optedIn)},4000)}).catch(function(e){alert("Erro OneSignal: "+e);fim("granted")})})}
-else{Notification.requestPermission().then(fim)}}
+Notification.requestPermission().then(function(p){
+if(p==="granted"&&ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){try{O.User.PushSubscription.optIn()}catch(e){}syncTags()})}
+fim(p);
+setTimeout(function(){var O=window.OneSignal;alert("Versao 4 | permissao: "+Notification.permission+" | SDK: "+((O&&O.User)?"carregou":"NAO carregou")+" | ID: "+((O&&O.User&&O.User.PushSubscription&&O.User.PushSubscription.id)||"nenhum"))},5000)
+})}
+
 </script>
 </body>
 </html>
