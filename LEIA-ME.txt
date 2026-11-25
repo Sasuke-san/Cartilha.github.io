@@ -1,0 +1,13 @@
+PASSO A PASSO
+
+1) Hospedar (grátis): entre em netlify.com/drop e arraste ESTA PASTA inteira. Você recebe um link https://...netlify.app
+   (Também funciona no Lovable via GitHub: coloque estes arquivos na pasta "public" do projeto.)
+2) Teste no celular: abra o link no Chrome e confira se aparece "Instalar app".
+3) Notificações agendadas (OneSignal, grátis):
+   - Crie conta em onesignal.com > New App > Web Push > informe o link do passo 1.
+   - Copie o App ID e cole em index.html na linha:  var ONESIGNAL_APP_ID="";
+   - Suba a pasta de novo.
+   - No painel do OneSignal crie mensagens (ex.: "Hora da receita do dia" às 8h, repetindo todo dia).
+4) APK: em pwabuilder.com cole o link > Android > ative "Notification delegation" > baixe o APK.
+
+ÍCONE: os ícones icon-192.png, icon-512.png e icon-512-maskable.png são provisórios. Troque pelos seus (mesmos nomes e tamanhos).
