@@ -553,7 +553,6 @@ var fim=function(p){if(p==="granted"||Notification.permission==="granted"){try{n
 Notification.requestPermission().then(function(p){
 if(p==="granted"&&ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){try{O.User.PushSubscription.optIn()}catch(e){}syncTags()})}
 fim(p);
-setTimeout(function(){var O=window.OneSignal;alert("Versao 5 | erro: "+(window.__osErr||"nenhum")+" | permissao: "+Notification.permission+" | SDK: "+((O&&O.User)?"carregou":"NAO carregou")+" | ID: "+((O&&O.User&&O.User.PushSubscription&&O.User.PushSubscription.id)||"nenhum"))},5000)
 })}
 
 </script>
