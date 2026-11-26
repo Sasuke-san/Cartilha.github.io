@@ -551,6 +551,7 @@ function ativarLembretes(){
 if(!("Notification" in window)){alert("Este aparelho não permite notificações aqui.");return}
 var fim=function(p){if(p==="granted"||Notification.permission==="granted"){try{navigator.serviceWorker.ready.then(function(r){r.showNotification("Lembretes ativados! 🍓",{body:"Vou te avisar da receita e do desafio do dia.",icon:"icon-192.png",badge:"icon-192.png"})})}catch(e){}}draw()};
 Notification.requestPermission().then(function(p){
+alert("Teste: resultado="+p+" | agora="+Notification.permission);
 if(p==="granted"&&ONESIGNAL_APP_ID){OneSignalDeferred.push(function(O){try{O.User.PushSubscription.optIn()}catch(e){}syncTags()})}
 fim(p);
 })}
